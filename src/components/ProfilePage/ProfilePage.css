@@ -302,21 +302,21 @@
 
 /* Icons */
 .icon-camera::before {
-    content: "📷";
+    content: "\f083";
 }
 
 .icon-edit::before {
-    content: "✏️";
+    content: "\f303";
 }
 
 .icon-map-pin::before {
-    content: "📍";
+    content: "\f276";
 }
 
 .icon-link::before {
-    content: "🔗";
+    content: "\f0c1";
 }
 
 .icon-calendar::before {
-    content: "📅";
+    content: "\f073";
 }

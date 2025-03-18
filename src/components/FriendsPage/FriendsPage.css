@@ -139,13 +139,13 @@
 
 /* Icons */
 .icon-check::before {
-    content: "✓";
+    content: "\f00c";
 }
 
 .icon-x::before {
-    content: "✕";
+    content: "\f00d";
 }
 
 .icon-user-plus::before {
-    content: "👤+";
+    content: "\2b";
 }

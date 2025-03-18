@@ -23,8 +23,6 @@ function formatDistanceToNow(date) {
 function PostCard({ post }) {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes);
-  const [showComments, setShowComments] = useState(false);
-  const [commentText, setCommentText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLike = () => {
@@ -34,16 +32,6 @@ function PostCard({ post }) {
       setLikesCount(likesCount + 1);
     }
     setLiked(!liked);
-  };
-
-  const handleComment = (e) => {
-    e.preventDefault();
-    if (commentText.trim()) {
-      // In a real app, you would send this to an API
-      setCommentText("");
-      // For now, just show the comments section
-      setShowComments(true);
-    }
   };
 
   const toggleDropdown = () => {
@@ -116,10 +104,7 @@ function PostCard({ post }) {
             <i className={`icon-heart ${liked ? "icon-heart-filled" : ""}`}></i>
             Like
           </button>
-          <button
-            className="post-action-button"
-            onClick={() => setShowComments(!showComments)}
-          >
+          <button className="post-action-button">
             <i className="icon-message-circle"></i>
             Comment
           </button>
@@ -128,29 +113,6 @@ function PostCard({ post }) {
             Share
           </button>
         </div>
-
-        {showComments && (
-          <div className="post-comments">
-            <form onSubmit={handleComment} className="comment-form">
-              <img
-                src="https://via.placeholder.com/32"
-                alt="Your avatar"
-                className="avatar avatar-sm"
-              />
-              <input
-                type="text"
-                placeholder="Write a comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                className="comment-input"
-              />
-              <button type="submit" className="btn btn-icon btn-ghost">
-                <i className="icon-send"></i>
-                <span className="sr-only">Send comment</span>
-              </button>
-            </form>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -77,9 +77,13 @@
 
 /* Icons */
 .icon-image::before {
-    content: "🖼️";
+    content: "\f03e";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
 }
 
 .icon-smile::before {
-    content: "😊";
+    content: "\f118";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
 }

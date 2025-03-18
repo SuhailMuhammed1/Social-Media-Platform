@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
-import ".AuthPage.css";
+import "./AuthPage.css";
 
 function AuthPage({ setIsLoggedIn }) {
   const [activeTab, setActiveTab] = useState("login");
@@ -10,7 +10,7 @@ function AuthPage({ setIsLoggedIn }) {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>SocialConnect</h1>
+          <h1>Social Media Platform</h1>
           <p>Connect with friends and share your moments</p>
         </div>
 

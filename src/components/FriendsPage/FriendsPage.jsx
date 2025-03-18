@@ -217,9 +217,9 @@ function FriendsPage() {
                           </div>
                           <button
                             className="btn btn-outline btn-sm"
-                            onClick={() => navigate(`/profile/${friend.id}`)}
+                            onClick={() => navigate("/messages")}
                           >
-                            Profile
+                            Message
                           </button>
                         </div>
                       </div>

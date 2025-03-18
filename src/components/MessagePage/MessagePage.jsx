@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLayout from "../components/MainLayout";
-import "../styles/MessagesPage.css";
+import MainLayout from "../MainLayout/MainLayout";
+import "./MessagePage.css";
 
 // Mock data for conversations
 const MOCK_CONVERSATIONS = [

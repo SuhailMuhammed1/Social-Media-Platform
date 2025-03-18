@@ -74,7 +74,7 @@ function MainLayout({ children }) {
         <div className="header-container">
           <div className="header-logo">
             <Link to="/feed" className="logo-link">
-              <span className="logo-text">SocialConnect</span>
+              <span className="logo-text">Social Media Platform</span>
             </Link>
           </div>
 

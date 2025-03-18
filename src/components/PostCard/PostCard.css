@@ -165,19 +165,22 @@
 
 /* Icons */
 .icon-heart::before {
-    content: "♡";
+    content: "\f004";
+    color: transparent;
+    -webkit-text-stroke: 1px red;
 }
 
 .icon-heart-filled::before {
-    content: "❤️";
+    content: "\f004";
+    color: red;
 }
 
 .icon-message-circle::before {
-    content: "💬";
+    content: "\f075";
 }
 
 .icon-share::before {
-    content: "↗️";
+    content: "\f064";
 }
 
 .icon-more-horizontal::before {
@@ -185,5 +188,5 @@
 }
 
 .icon-send::before {
-    content: "📤";
+    content: "\f1d8";
 }

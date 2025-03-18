@@ -133,37 +133,6 @@ function FeedPage() {
               </div>
             </div>
           </div>
-
-          <div className="card">
-            <div className="card-content">
-              <h3 className="sidebar-heading">Recent Messages</h3>
-              <div className="recent-messages">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="message-preview"
-                    onClick={() => navigate("/messages")}
-                  >
-                    <img
-                      src={`https://via.placeholder.com/40`}
-                      alt="User avatar"
-                      className="avatar"
-                    />
-                    <div className="message-preview-content">
-                      <p className="message-sender">User {i}</p>
-                      <p className="message-excerpt">Hey, how are you doing?</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button
-                className="btn btn-ghost btn-full"
-                onClick={() => navigate("/messages")}
-              >
-                View All Messages
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </MainLayout>

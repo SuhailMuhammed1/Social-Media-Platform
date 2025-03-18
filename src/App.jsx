@@ -5,12 +5,12 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import AuthPage from "./pages/AuthPage";
-import FeedPage from "./pages/FeedPage";
-import ProfilePage from "./pages/ProfilePage";
-import MessagesPage from "./pages/MessagesPage";
-import FriendsPage from "./pages/FriendsPage";
-import NotificationsPage from "./pages/NotificationsPage";
+import AuthPage from "./components/Authentication/AuthPage";
+import FeedPage from "./components/FeedPage/FeedPage";
+import ProfilePage from "./components/ProfilePage/ProfilePage";
+import MessagesPage from "./components/MessagePage/MessagePage";
+import FriendsPage from "./components/FriendsPage/FriendsPage";
+import NotificationsPage from "./components/NotificationsPage/NotificationsPage";
 import "./App.css";
 
 function App() {

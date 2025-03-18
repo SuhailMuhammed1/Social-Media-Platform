@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ".Forms.css";
+import "./Forms.css";
 
 function RegisterForm({ setActiveTab }) {
   const [formData, setFormData] = useState({
