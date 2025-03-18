@@ -1,0 +1,189 @@
+.post-card {
+    margin-bottom: 1rem;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.post-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.post-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-user-name {
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.post-user-name:hover {
+    text-decoration: underline;
+}
+
+.post-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.post-options {
+    position: relative;
+}
+
+.post-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 200px;
+    background-color: var(--card-background);
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 10;
+}
+
+.post-dropdown-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 0.875rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.post-dropdown-item:hover {
+    background-color: var(--accent-color);
+}
+
+.post-dropdown-item-danger {
+    color: var(--destructive-color);
+}
+
+.post-content {
+    padding: 0 1rem 1rem;
+}
+
+.post-text {
+    margin-bottom: 1rem;
+    white-space: pre-line;
+}
+
+.post-image-container {
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.post-footer {
+    padding: 0 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.25rem 0;
+    margin-bottom: 0.5rem;
+}
+
+.post-action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+.post-action-button:hover {
+    background-color: var(--accent-color);
+}
+
+.post-action-button.liked {
+    color: var(--destructive-color);
+}
+
+.post-comments {
+    margin-top: 0.75rem;
+}
+
+.comment-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--accent-color);
+    font-size: 0.875rem;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--card-background);
+}
+
+/* Icons */
+.icon-heart::before {
+    content: "♡";
+}
+
+.icon-heart-filled::before {
+    content: "❤️";
+}
+
+.icon-message-circle::before {
+    content: "💬";
+}
+
+.icon-share::before {
+    content: "↗️";
+}
+
+.icon-more-horizontal::before {
+    content: "⋯";
+}
+
+.icon-send::before {
+    content: "📤";
+}

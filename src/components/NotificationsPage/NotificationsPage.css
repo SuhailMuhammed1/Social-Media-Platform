@@ -1,0 +1,85 @@
+.notifications-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.notifications-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--card-background);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.notification-item:hover {
+    background-color: var(--accent-color);
+}
+
+.notification-item.unread {
+    background-color: rgba(79, 70, 229, 0.05);
+}
+
+.notification-icon {
+    margin-right: 1rem;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-text {
+    margin-bottom: 0.25rem;
+}
+
+.notification-user {
+    font-weight: 600;
+}
+
+.notification-target {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.notification-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--primary-color);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.empty-notifications {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    background-color: var(--card-background);
+    border-radius: 0.5rem;
+}

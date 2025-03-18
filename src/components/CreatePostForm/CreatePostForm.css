@@ -1,0 +1,85 @@
+.create-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.create-post-header {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.create-post-textarea {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--accent-color);
+    font-size: 0.875rem;
+    resize: none;
+    min-height: 80px;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.create-post-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--card-background);
+}
+
+.create-post-image-preview {
+    position: relative;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.preview-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.remove-image-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.remove-image-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.create-post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-post-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+/* Icons */
+.icon-image::before {
+    content: "🖼️";
+}
+
+.icon-smile::before {
+    content: "😊";
+}
