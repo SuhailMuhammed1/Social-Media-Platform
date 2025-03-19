@@ -60,7 +60,7 @@ function MainLayout({ children }) {
   }
 
   const avatarUrl = user.avatar
-    ? `http://localhost:5000${user.avatar}`
+    ? `https://social-media-platform-backend-lmnk.onrender.com${user.avatar}`
     : "/placeholder.svg";
 
   return (

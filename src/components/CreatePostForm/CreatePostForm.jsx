@@ -12,7 +12,7 @@ function CreatePostForm({ onPostCreated, userId }) {
   const fileInputRef = useRef(null);
 
   const avatarUrl = user?.avatar
-    ? `http://localhost:5000${user.avatar}`
+    ? `https://social-media-platform-backend-lmnk.onrender.com${user.avatar}`
     : "/placeholder.svg";
 
   const handleImageClick = () => {
