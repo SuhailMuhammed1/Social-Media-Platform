@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://social-media-platform-backend-lmnk.onrender.com";
+const API_BASE_URL =
+  "https://social-media-platform-backend-lmnk.onrender.com/api";
 
 export const registerUser = async (userData) => {
   try {
