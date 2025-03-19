@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Forms.css";
+import { registerUser } from "../../service/api";
 
 function RegisterForm({ setActiveTab }) {
   const [formData, setFormData] = useState({
@@ -30,25 +31,14 @@ function RegisterForm({ setActiveTab }) {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await registerUser(formData);
+      if (data.message !== "User registered successfully")
+        throw new Error(data.message);
 
-      setSuccess("Registration successful! You can now log in.");
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-
-      // Switch to login tab after a delay
-      setTimeout(() => {
-        setActiveTab("login");
-      }, 2000);
+      setSuccess("Registration successful!");
+      setTimeout(() => setActiveTab("login"), 2000);
     } catch (error) {
-      setError("Registration failed. Please try again.");
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }

@@ -4,6 +4,7 @@ import MainLayout from "../MainLayout/MainLayout";
 import PostCard from "../PostCard/PostCard";
 import CreatePostForm from "../CreatePostForm/CreatePostForm";
 import "./FeedPage.css";
+import { getFeedPosts } from "../../service/api";
 
 // Mock data for posts
 const MOCK_POSTS = [
@@ -52,7 +53,7 @@ const MOCK_POSTS = [
 
 function FeedPage() {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState(MOCK_POSTS);
+  const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,22 +71,34 @@ function FeedPage() {
     setIsLoading(false);
   }, [navigate]);
 
-  const handleCreatePost = (newPost) => {
-    const post = {
-      id: Date.now().toString(),
-      user: {
-        id: user.id,
-        name: user.name,
-        avatar: user.avatar,
-      },
-      content: newPost.content,
-      image: newPost.image || null,
-      likes: 0,
-      comments: 0,
-      createdAt: new Date().toISOString(),
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getFeedPosts();
+        setPosts(data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
-    setPosts([post, ...posts]);
+    fetchPosts();
+  }, []);
+
+  const handlePostCreated = (newPost) => {
+    const userData = JSON.parse(localStorage.getItem("user")); // Get logged-in user
+
+    if (!userData) return;
+
+    const postWithUser = {
+      ...newPost,
+      user: {
+        id: userData.id,
+        name: userData.name,
+        avatar: userData.avatar || "/placeholder.svg",
+      },
+    };
+
+    setPosts([postWithUser, ...posts]);
   };
 
   if (isLoading) {
@@ -98,13 +111,16 @@ function FeedPage() {
         <div className="feed-main">
           <div className="card create-post-card">
             <div className="card-content">
-              <CreatePostForm onSubmit={handleCreatePost} />
+              <CreatePostForm
+                onPostCreated={handlePostCreated}
+                userId={user?.id}
+              />
             </div>
           </div>
 
           <div className="posts-container">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard key={post._id || post.id} post={post} />
             ))}
           </div>
         </div>

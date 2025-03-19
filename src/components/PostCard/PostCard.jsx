@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import "./PostCard.css";
+import { AuthContext } from "../context/AuthContext";
 
 function formatDistanceToNow(date) {
   const now = new Date();
@@ -21,9 +22,13 @@ function formatDistanceToNow(date) {
 }
 
 function PostCard({ post }) {
+  const { user } = useContext(AuthContext);
   const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(post.likes);
+  const [likesCount, setLikesCount] = useState(post.likes || 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const isCurrentUser = user && post.user && user.id === post.user.id;
+  const displayName = isCurrentUser ? "You" : post.user?.name || "Unknown User";
 
   const handleLike = () => {
     if (liked) {
@@ -43,14 +48,16 @@ function PostCard({ post }) {
       <div className="post-header">
         <div className="post-user">
           <img
-            src={post.user.avatar || "/placeholder.svg"}
-            alt={post.user.name}
+            src={
+              post.user?.avatar
+                ? `http://localhost:5000${user.avatar}`
+                : "/placeholder.svg"
+            }
+            alt={displayName}
             className="avatar"
           />
           <div className="post-user-info">
-            <Link to={`/profile/${post.user.id}`} className="post-user-name">
-              {post.user.name}
-            </Link>
+            <div className="post-user-name">{displayName}</div>
             <span className="post-time">
               {formatDistanceToNow(post.createdAt)}
             </span>
@@ -79,10 +86,10 @@ function PostCard({ post }) {
       <div className="post-content">
         <p className="post-text">{post.content}</p>
 
-        {post.image && (
+        {post.media && (
           <div className="post-image-container">
             <img
-              src={post.image || "/placeholder.svg"}
+              src={`http://localhost:5000${post.media}` || "/placeholder.svg"}
               alt="Post"
               className="post-image"
             />
@@ -93,7 +100,7 @@ function PostCard({ post }) {
       <div className="post-footer">
         <div className="post-stats">
           <div>{likesCount} likes</div>
-          <div>{post.comments} comments</div>
+          <div>0 comments</div>
         </div>
 
         <div className="post-actions">

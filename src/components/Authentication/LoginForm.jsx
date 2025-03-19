@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Forms.css";
+import { loginUser } from "../../service/api";
+import { AuthContext } from "../context/AuthContext";
 
-function LoginForm({ setIsLoggedIn }) {
+function LoginForm() {
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -22,25 +25,18 @@ function LoginForm({ setIsLoggedIn }) {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await loginUser(formData);
 
-      // Mock successful login
-      localStorage.setItem("token", "mock-jwt-token");
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          id: "1",
-          name: "John Doe",
-          email: formData.email,
-          avatar: "https://via.placeholder.com/100",
-        })
-      );
-
-      setIsLoggedIn(true);
-      navigate("/feed");
+      if (data && data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user)); // Store user data
+        localStorage.setItem("token", data.token); // Store token
+        setUser(data.user);
+        navigate("/feed", { replace: true });
+      } else {
+        throw new Error("Login failed: No user data returned.");
+      }
     } catch (error) {
-      setError("Login failed. Please check your credentials and try again.");
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }

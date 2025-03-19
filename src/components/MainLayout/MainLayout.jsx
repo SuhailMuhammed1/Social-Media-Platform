@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./MainLayout.css";
+import { AuthContext } from "../context/AuthContext";
 
 function MainLayout({ children }) {
+  const { user, isLoading, handleLogout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(null);
+  //   const [user, setUser] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -14,23 +16,13 @@ function MainLayout({ children }) {
   const [notificationCount, setNotificationCount] = useState(5);
   const [friendRequestCount, setFriendRequestCount] = useState(2);
 
-  useEffect(() => {
-    // Check if user is logged in
-    const userData = localStorage.getItem("user");
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
 
-    if (!userData) {
-      navigate("/");
-      return;
-    }
-
-    setUser(JSON.parse(userData));
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
+  if (!user) {
+    return <div className="loading">Loading...</div>;
+  }
 
   const navItems = [
     { icon: "home", label: "Feed", href: "/feed" },
@@ -66,6 +58,10 @@ function MainLayout({ children }) {
   if (!user) {
     return <div className="loading">Loading...</div>;
   }
+
+  const avatarUrl = user.avatar
+    ? `http://localhost:5000${user.avatar}`
+    : "/placeholder.svg";
 
   return (
     <div className="layout">
@@ -116,10 +112,7 @@ function MainLayout({ children }) {
             <div className="user-dropdown">
               <button className="avatar-button" onClick={toggleDropdown}>
                 <div className="avatar">
-                  <img
-                    src={user.avatar || "/placeholder.svg"}
-                    alt={user.name}
-                  />
+                  <img src={avatarUrl} alt={user.name} />
                 </div>
               </button>
 
@@ -133,9 +126,7 @@ function MainLayout({ children }) {
                   <Link to="/profile" className="dropdown-item">
                     Profile
                   </Link>
-                  <Link to="/settings" className="dropdown-item">
-                    Settings
-                  </Link>
+                  <Link className="dropdown-item">Settings</Link>
                   <div className="dropdown-divider"></div>
                   <button className="dropdown-item" onClick={handleLogout}>
                     Log out
@@ -151,7 +142,7 @@ function MainLayout({ children }) {
       {isMobileMenuOpen && (
         <div className="mobile-menu">
           <Link to="/feed" className="mobile-logo">
-            <span className="logo-text">SocialConnect</span>
+            <span className="logo-text">Social Media Platform</span>
           </Link>
 
           <nav className="mobile-nav">

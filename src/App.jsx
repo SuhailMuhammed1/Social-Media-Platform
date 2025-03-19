@@ -12,57 +12,75 @@ import MessagesPage from "./components/MessagePage/MessagePage";
 import FriendsPage from "./components/FriendsPage/FriendsPage";
 import NotificationsPage from "./components/NotificationsPage/NotificationsPage";
 import "./App.css";
+import ProtectedRoute from "./components/Authentication/ProtectedRoute";
+import { AuthProvider } from "./components/context/AuthContext";
+import EditProfile from "./components/EditProfile/EditProfile";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/feed" />
-            ) : (
-              <AuthPage setIsLoggedIn={setIsLoggedIn} />
-            )
-          }
-        />
-        <Route
-          path="/feed"
-          element={isLoggedIn ? <FeedPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/profile"
-          element={isLoggedIn ? <ProfilePage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/profile/:id"
-          element={isLoggedIn ? <ProfilePage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/messages"
-          element={isLoggedIn ? <MessagesPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/friends"
-          element={isLoggedIn ? <FriendsPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/notifications"
-          element={isLoggedIn ? <NotificationsPage /> : <Navigate to="/" />}
-        />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<AuthPage />} />
+          <Route
+            path="/feed"
+            element={
+              <ProtectedRoute>
+                <FeedPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:id"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/friends"
+            element={
+              <ProtectedRoute>
+                <FriendsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <NotificationsPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

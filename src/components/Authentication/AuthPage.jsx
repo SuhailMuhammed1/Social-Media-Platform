@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import "./AuthPage.css";
 
-function AuthPage({ setIsLoggedIn }) {
+function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
@@ -31,9 +31,7 @@ function AuthPage({ setIsLoggedIn }) {
           </div>
 
           <div className="auth-tabs-content">
-            {activeTab === "login" && (
-              <LoginForm setIsLoggedIn={setIsLoggedIn} />
-            )}
+            {activeTab === "login" && <LoginForm />}
             {activeTab === "register" && (
               <RegisterForm setActiveTab={setActiveTab} />
             )}

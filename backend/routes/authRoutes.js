@@ -15,7 +15,12 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already in use" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
 
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
@@ -41,13 +46,13 @@ router.post("/login", async (req, res) => {
     });
 
     res.cookie("token", token, { httpOnly: true, secure: true });
+
     res.json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
       },
     });
   } catch (error) {
@@ -61,17 +66,48 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-// Check Authentication
+// Get User Profile
 router.get("/me", async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({ message: "Not authenticated" });
-
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Token missing. Please log in." });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select("-password");
-    res.json(user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar || "",
+      coverPhoto: user.coverPhoto || "",
+      bio: user.bio || "No bio available",
+      work: user.work || "Not specified",
+      education: user.education || "Not specified",
+      interest: user.interest && user.interest.length > 0 ? user.interest : [],
+      location: user.location || "Not specified",
+      website: user.website || "",
+      joinedDate: user.joinedDate
+        ? user.joinedDate.toISOString().split("T")[0]
+        : "Unknown",
+      following: user.following || 0,
+      followers: user.followers || 0,
+      photos: user.photos && user.photos.length > 0 ? user.photos : [],
+      friends: user.friends && user.friends.length > 0 ? user.friends : [],
+      posts: user.posts && user.posts.length > 0 ? user.posts : [],
+    });
   } catch (error) {
-    res.status(500).json({ message: "Invalid token" });
+    console.error("Token verification failed:", error);
+    return res
+      .status(401)
+      .json({ message: "Invalid token. Please log in again." });
   }
 });
 

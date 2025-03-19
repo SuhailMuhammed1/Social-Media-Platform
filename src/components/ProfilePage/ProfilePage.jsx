@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../MainLayout/MainLayout";
 import PostCard from "../PostCard/PostCard";
 import "./ProfilePage.css";
+import { getProfile, uploadAvatar, uploadCoverPhoto } from "../../service/api";
 
 // Mock data for user profile
 const MOCK_PROFILE = {
@@ -51,14 +52,18 @@ const MOCK_PROFILE = {
 function ProfilePage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState({
+    friends: [],
+    photos: [],
+    posts: [],
+    interest: [],
+  });
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("posts");
   const [isLoading, setIsLoading] = useState(true);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   useEffect(() => {
-    // Check if user is logged in
     const userData = localStorage.getItem("user");
 
     if (!userData) {
@@ -69,15 +74,44 @@ function ProfilePage() {
     const currentUser = JSON.parse(userData);
     setUser(currentUser);
 
-    // In a real app, you would fetch the profile data from an API based on the id
-    // For now, we'll use mock data
-    setProfile(MOCK_PROFILE);
+    const fetchProfile = async () => {
+      try {
+        const profileData = await getProfile(id || currentUser.id);
+        setProfile({
+          ...profileData,
+          friends: profileData.friends || [],
+          photos: profileData.photos || [],
+          posts: profileData.posts || [],
+          interests: profileData.interests || [],
+        });
+        setIsCurrentUser(id ? currentUser.id === id : true);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    // Check if this is the current user's profile
-    setIsCurrentUser(id ? currentUser.id === id : true);
-
-    setIsLoading(false);
+    fetchProfile();
   }, [navigate, id]);
+
+  const handleUpload = async (event, type) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    let response;
+    if (type === "avatar") {
+      response = await uploadAvatar(file);
+    } else if (type === "coverPhoto") {
+      response = await uploadCoverPhoto(file);
+    }
+
+    if (response && response[type]) {
+      setProfile((prevProfile) => ({ ...prevProfile, [type]: response[type] }));
+    } else {
+      alert(response.error || "Upload failed");
+    }
+  };
 
   if (isLoading || !profile) {
     return <div className="loading">Loading...</div>;
@@ -90,50 +124,81 @@ function ProfilePage() {
         <div className="profile-header card">
           <div className="cover-photo">
             <img
-              src={profile.coverPhoto || "/placeholder.svg"}
+              src={
+                profile.coverPhoto
+                  ? `http://localhost:5000${profile.coverPhoto}`
+                  : "/placeholder.svg"
+              }
               alt="Cover"
               className="cover-photo-img"
             />
             {isCurrentUser && (
-              <button className="cover-photo-btn btn btn-icon">
+              <button
+                className="cover-photo-btn btn btn-icon"
+                onClick={() => document.getElementById("coverInput").click()}
+              >
                 <i className="icon-camera"></i>
                 <span className="sr-only">Change cover photo</span>
               </button>
             )}
+            <input
+              type="file"
+              id="coverInput"
+              style={{ display: "none" }}
+              onChange={(e) => handleUpload(e, "coverPhoto")}
+              accept="image/*"
+            />
           </div>
 
           <div className="profile-info">
             <div className="profile-main-info">
               <div className="profile-avatar-container">
                 <img
-                  src={profile.avatar || "/placeholder.svg"}
+                  src={
+                    profile.avatar
+                      ? `http://localhost:5000${profile.avatar}`
+                      : "/placeholder.svg"
+                  }
                   alt={profile.name}
                   className="profile-avatar"
                 />
                 {isCurrentUser && (
-                  <button className="avatar-change-btn btn btn-icon">
+                  <button
+                    className="avatar-change-btn btn btn-icon"
+                    onClick={() =>
+                      document.getElementById("avatarInput").click()
+                    }
+                  >
                     <i className="icon-camera"></i>
                     <span className="sr-only">Change profile picture</span>
                   </button>
                 )}
+                <input
+                  type="file"
+                  id="avatarInput"
+                  style={{ display: "none" }}
+                  className="hidden"
+                  onChange={(e) => handleUpload(e, "avatar")}
+                  accept="image/*"
+                />
               </div>
               <div className="profile-name-container">
                 <h1 className="profile-name">{profile.name}</h1>
-                <p className="profile-username">@{profile.username}</p>
+                <p className="profile-username">
+                  @{profile.name.toLowerCase().replace(/\s/g, "")}
+                </p>
               </div>
             </div>
 
             <div className="profile-actions">
-              {isCurrentUser ? (
+              {isCurrentUser && (
                 <button
                   className="btn btn-outline"
-                  onClick={() => navigate("/settings")}
+                  onClick={() => navigate("/edit-profile")}
                 >
                   <i className="icon-edit"></i>
                   Edit Profile
                 </button>
-              ) : (
-                <button className="btn btn-primary">Follow</button>
               )}
             </div>
           </div>
@@ -218,9 +283,13 @@ function ProfilePage() {
           <div className="profile-tab-content">
             {activeTab === "posts" && (
               <div className="profile-posts">
-                {profile.posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
+                {profile.posts && profile.posts.length > 0 ? (
+                  profile.posts.map((post) => (
+                    <PostCard key={post.id} post={post} />
+                  ))
+                ) : (
+                  <p>No posts available.</p>
+                )}
               </div>
             )}
 
@@ -228,14 +297,18 @@ function ProfilePage() {
               <div className="card">
                 <div className="card-content">
                   <div className="photos-grid">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <img
-                        key={i}
-                        src={`https://via.placeholder.com/300`}
-                        alt={`Photo ${i}`}
-                        className="photo-item"
-                      />
-                    ))}
+                    {profile.photos.length > 0 ? (
+                      profile.photos.map((photo, i) => (
+                        <img
+                          key={i}
+                          src={photo}
+                          alt={`Photo ${i}`}
+                          className="photo-item"
+                        />
+                      ))
+                    ) : (
+                      <p>No photos available.</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -245,17 +318,22 @@ function ProfilePage() {
               <div className="card">
                 <div className="card-content">
                   <div className="friends-grid">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                      <div key={i} className="friend-item">
-                        <img
-                          src={`https://via.placeholder.com/100`}
-                          alt={`Friend ${i}`}
-                          className="friend-avatar"
-                        />
-                        <p className="friend-item-name">Friend {i}</p>
-                        <p className="friend-item-mutual">42 mutual friends</p>
-                      </div>
-                    ))}
+                    {profile.friends > 0 ? (
+                      profile.friends.map((friend, i) => (
+                        <div key={i} className="friend-item">
+                          <img
+                            src={
+                              friend.avatar || "https://via.placeholder.com/100"
+                            }
+                            alt={`Friend ${i}`}
+                            className="friend-avatar"
+                          />
+                          <p className="friend-item-name">{friend.name}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No friends.</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -270,26 +348,24 @@ function ProfilePage() {
                   </div>
                   <div className="about-section">
                     <h3 className="about-heading">Work</h3>
-                    <p>Senior Developer at Acme Inc.</p>
+                    <p>{profile.work}</p>
                   </div>
                   <div className="about-section">
                     <h3 className="about-heading">Education</h3>
-                    <p>Computer Science, University of Technology</p>
+                    <p>{profile.education}</p>
                   </div>
                   <div className="about-section">
                     <h3 className="about-heading">Interests</h3>
                     <div className="interests-list">
-                      {[
-                        "Photography",
-                        "Hiking",
-                        "Coding",
-                        "Coffee",
-                        "Travel",
-                      ].map((interest) => (
-                        <div key={interest} className="interest-tag">
-                          {interest}
-                        </div>
-                      ))}
+                      {profile.interest.length > 0 ? (
+                        profile.interest.map((interest, index) => (
+                          <div key={index} className="interest-tag">
+                            {interest}
+                          </div>
+                        ))
+                      ) : (
+                        <p>Not specified</p>
+                      )}
                     </div>
                   </div>
                 </div>

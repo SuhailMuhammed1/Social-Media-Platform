@@ -1,57 +1,63 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import "./CreatePostForm.css";
+import { createPost } from "../../service/api";
+import { AuthContext } from "../context/AuthContext";
 
-function CreatePostForm({ onSubmit }) {
+function CreatePostForm({ onPostCreated, userId }) {
+  const { user } = useContext(AuthContext);
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
+
+  const avatarUrl = user?.avatar
+    ? `http://localhost:5000${user.avatar}`
+    : "/placeholder.svg";
 
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleImageChange = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // In a real app, you would upload this to a server
-      // For now, we'll just use a placeholder
-      setImage("https://via.placeholder.com/600x400");
+      setMedia(file);
+      setPreview(URL.createObjectURL(file));
     }
-  };
-
-  const handleRemoveImage = () => {
-    setImage(null);
-    fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!content.trim() && !image) {
-      alert("Please add some text or an image to your post.");
+    if (!content.trim() && !media) {
+      alert("Please add some text or media to your post.");
+      return;
+    }
+
+    if (!userId) {
+      alert("User not authenticated. Please log in.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // In a real app, you would send this to an API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await createPost({ content, media, userId });
 
-      onSubmit({
-        content,
-        image,
-      });
-
-      // Reset form
-      setContent("");
-      setImage(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+      if (!response || response.error) {
+        console.error("Server Error:", response.error);
+        alert(response.error || "Error creating post");
+        return;
       }
+
+      onPostCreated(response.post);
+      setContent("");
+      setMedia(null);
+      setPreview(null);
+      fileInputRef.current.value = "";
     } catch (error) {
-      alert("There was an error creating your post. Please try again.");
+      alert("Error creating post.");
     } finally {
       setIsSubmitting(false);
     }
@@ -60,11 +66,7 @@ function CreatePostForm({ onSubmit }) {
   return (
     <form onSubmit={handleSubmit} className="create-post-form">
       <div className="create-post-header">
-        <img
-          src="https://via.placeholder.com/40"
-          alt="Your avatar"
-          className="avatar"
-        />
+        <img src={avatarUrl} alt="Your avatar" className="avatar" />
         <textarea
           placeholder="What's on your mind?"
           value={content}
@@ -74,21 +76,13 @@ function CreatePostForm({ onSubmit }) {
         />
       </div>
 
-      {image && (
+      {preview && (
         <div className="create-post-image-preview">
           <img
-            src={image || "/placeholder.svg"}
+            src={preview || "/placeholder.svg"}
             alt="Post preview"
             className="preview-image"
           />
-          <button
-            type="button"
-            className="remove-image-button"
-            onClick={handleRemoveImage}
-          >
-            <i className="icon-x"></i>
-            <span className="sr-only">Remove image</span>
-          </button>
         </div>
       )}
 
@@ -100,13 +94,13 @@ function CreatePostForm({ onSubmit }) {
             onClick={handleImageClick}
           >
             <i className="icon-image"></i>
-            <span className="sr-only">Add image</span>
+            <span className="sr-only">Add Media</span>
           </button>
           <input
             type="file"
             ref={fileInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
+            onChange={handleFileChange}
+            accept="image/*,video/*"
             className="hidden-file-input"
           />
           <button type="button" className="btn btn-ghost btn-icon">

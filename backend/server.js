@@ -5,8 +5,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/authRoutes");
+const postRoutes = require("./routes/posts");
+const usersRoutes = require("./routes/users");
 
 const app = express();
+app.use("/uploads", express.static("uploads"));
 
 // Middleware
 app.use(express.json());
@@ -15,13 +18,12 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/users", usersRoutes);
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
