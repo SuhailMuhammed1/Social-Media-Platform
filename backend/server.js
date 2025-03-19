@@ -13,7 +13,12 @@ app.use("/uploads", express.static("uploads"));
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: "https://social-media-platform-backend-lmnk.onrender.com", credentials: true }));
+app.use(
+  cors({
+    origin: "https://social-media-platform-frontend-sz8o.onrender.com/",
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 // Routes
