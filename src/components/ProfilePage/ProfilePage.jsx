@@ -126,7 +126,7 @@ function ProfilePage() {
             <img
               src={
                 profile.coverPhoto
-                  ? `https://social-media-platform-backend-lmnk.onrender.com${profile.coverPhoto}`
+                  ? `http://localhost:5000${profile.coverPhoto}`
                   : "/placeholder.svg"
               }
               alt="Cover"
@@ -156,7 +156,7 @@ function ProfilePage() {
                 <img
                   src={
                     profile.avatar
-                      ? `https://social-media-platform-backend-lmnk.onrender.com${profile.avatar}`
+                      ? `http://localhost:5000${profile.avatar}`
                       : "/placeholder.svg"
                   }
                   alt={profile.name}

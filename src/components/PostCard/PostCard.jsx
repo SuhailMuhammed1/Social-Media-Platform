@@ -50,7 +50,7 @@ function PostCard({ post }) {
           <img
             src={
               post.user?.avatar
-                ? `https://social-media-platform-backend-lmnk.onrender.com${user.avatar}`
+                ? `http://localhost:5000${user.avatar}`
                 : "/placeholder.svg"
             }
             alt={displayName}
@@ -89,10 +89,7 @@ function PostCard({ post }) {
         {post.media && (
           <div className="post-image-container">
             <img
-              src={
-                `https://social-media-platform-backend-lmnk.onrender.com${post.media}` ||
-                "/placeholder.svg"
-              }
+              src={`http://localhost:5000${post.media}` || "/placeholder.svg"}
               alt="Post"
               className="post-image"
             />
